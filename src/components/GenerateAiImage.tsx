@@ -4,6 +4,7 @@ import React from "react";
 import ButtonSubmit from "./ButtonSubmit";
 import { generateAI } from "@/server/actions";
 import { useCanvasContextProvider } from "@/contextProviders/useCanvasProvider";
+import Image from "next/image";
 
 type GenerateAiImageType = {
   generatedAi: string | null;
@@ -12,11 +13,12 @@ type GenerateAiImageType = {
 export default function GenerateAiImage({ generatedAi }: GenerateAiImageType) {
   const { canvasRef } = useCanvasContextProvider();
   return (
-    <>
+    <div className="flex flex-col gap-2 justify-center items-center p-1 ">
       <form
-        className="bg-slate-100  p-1  flex flex-row gap-2  rounded-sm"
+        className="bg-slate-100 p-1  flex flex-row gap-2  rounded-sm"
         action={(formdata) => {
           let image = "";
+
           if (canvasRef.current) {
             image = canvasRef.current.toDataURL("image/png");
           }
@@ -31,7 +33,10 @@ export default function GenerateAiImage({ generatedAi }: GenerateAiImageType) {
           placeholder="Enter image description"
         />
       </form>
-      {generatedAi && <img src={generatedAi} alt="safasf" />}
-    </>
+
+      {generatedAi && (
+        <Image width={300} height={300} src={generatedAi} alt="safasf" />
+      )}
+    </div>
   );
 }

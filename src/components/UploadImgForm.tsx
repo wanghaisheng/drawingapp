@@ -19,7 +19,7 @@ export default function UploadImgForm() {
       className="flex flex-col rounded-md  bg-slate-500/70 h-fit w-fit py-4 px-2 gap-6"
     >
       <label htmlFor="imgName">Enter Image name</label>
-      <input type="text" id="imgName" name="name" />
+      <input className="text-black" type="text" id="imgName" name="name" />
       <button className="text-black border-2 p-1 bg-gray-300 rounded-md hover:bg-gray-900 hover:text-gray-300 transition-all border-black">
         Save Image
       </button>

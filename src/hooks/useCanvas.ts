@@ -124,7 +124,7 @@ export function useCanvas() {
 
   const onMouseUp = (e: React.MouseEvent) => {
     setIsDrawing(false);
-    e.preventDefault();
+
     e.stopPropagation();
 
     prevPoint.current = null;
@@ -167,7 +167,7 @@ export function useCanvas() {
 
       if (stroke === selectedStroke) {
         // Highlight the selected stroke (e.g., draw a border around it)
-        // context.lineWidth = stroke.lineWidth + 2;
+        context.lineWidth = stroke.lineWidth + 2;
         // context.strokeStyle = "blue";
         context.stroke();
       }
@@ -203,7 +203,6 @@ export function useCanvas() {
   };
 
   const onMouseClick = (e: React.MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
     if (isDrawing) {
       console.log("still draeing");

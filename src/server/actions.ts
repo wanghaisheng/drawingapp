@@ -13,7 +13,6 @@ const replicate = new Replicate({
 });
 
 export async function checkStatus(id: string) {
-  console.log("id inside the function", id);
   const newResponse = await fetch(
     `https://api.replicate.com/v1/predictions/${id}`,
     {
@@ -31,9 +30,7 @@ export async function checkStatus(id: string) {
 }
 
 export async function generateAI(formdata: any, image: string) {
-  console.log("image", image);
   const prompt = formdata.get("prompt");
-  console.log("prompt", prompt);
   const response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
@@ -43,18 +40,18 @@ export async function generateAI(formdata: any, image: string) {
     body: JSON.stringify({
       version:
         "435061a1b5a4c1e26740464bf786efdfa9cb3a3ac488595a2de23e143fdb0117",
-
       input: {
         eta: 0,
-        // image:"https://replicate.delivery/pbxt/IJE6zP4jtdwxe7SffC7te9DPHWHW99dMXED5AWamlBNcvxn0/user_1.png",
-        image: image,
+        image:
+          // "https://replicate.delivery/pbxt/IJE6zP4jtdwxe7SffC7te9DPHWHW99dMXED5AWamlBNcvxn0/user_1.png",
+          image,
         scale: 7,
         // prompt: "a photo of a brightly colored turtle",
         prompt: prompt,
-        // a_prompt: "best quality, extremely detailed",
-        // n_prompt:
-        //   "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality",
-        // ddim_steps: 20,
+        a_prompt: "best quality, extremely detailed",
+        n_prompt:
+          "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality",
+        ddim_steps: 20,
         num_samples: "1",
         image_resolution: "512",
       },
@@ -68,15 +65,26 @@ export async function generateAI(formdata: any, image: string) {
   let check;
   console.log("check", check);
 
+  let i = 0;
   while (true) {
     await sleep(2000);
 
     check = await checkStatus(id);
     console.log("check", check.status);
 
+    if (check.status == 404) {
+      console.log("error", check.detail);
+      break;
+    }
+
     if (check.status == "succeeded" || check.status == "failed") {
       console.log("check", check.status);
       await redis.set("generatedAi", check.output[1]);
+      break;
+    }
+
+    i++;
+    if (i == 10) {
       break;
     }
 
@@ -90,7 +98,7 @@ export async function handleRedis(
   strokes: Stroke[]
 ) {
   const id = uid();
-  if (image == "") {
+  if (image.length < 1) {
     return;
   }
   let upload = {

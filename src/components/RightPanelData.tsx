@@ -10,10 +10,11 @@ export default async function RightPanelData() {
   const generatedAi: string | null = await redis.get("generatedAi");
 
   return (
-    <div className="flex flex-col items-start gap-4 justify-between">
-      <UploadImgForm />
-      <ImageHistoryConatiner userData={allDrawings} />
-      <GenerateAiImage generatedAi={generatedAi} />
-    </div>
+    <>
+      {/* <div className="flex flex-row items-center gap-1 justify-center">
+      </div> */}
+      {allDrawings && <ImageHistoryConatiner userData={allDrawings} />}
+      {generatedAi && <GenerateAiImage generatedAi={generatedAi} />}
+    </>
   );
 }
